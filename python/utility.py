@@ -34,12 +34,15 @@ def download_file(base_path, file_name, date_range=None, folder=None):
     date_range = date_range.replace(" ","_")
     base_path = os.path.join(base_path, date_range)
   save_path = get_destination_dir(os.path.join(base_path, file_name), folder)
-  
+  save_path_without_zip = save_path.replace('.zip', '') + '.csv'
 
   if os.path.exists(save_path):
     print("\nfile already exists! {}".format(save_path))
     return
-  
+  if os.path.exists(save_path_without_zip):
+    print("\nfile unzipped already exists! {}".format(save_path_without_zip))
+    return
+
   # make the directory
   if not os.path.exists(base_path):
     Path(get_destination_dir(base_path)).mkdir(parents=True, exist_ok=True)
@@ -56,13 +59,13 @@ def download_file(base_path, file_name, date_range=None, folder=None):
       dl_progress = 0
       print("\nFile Download: {}".format(save_path))
       while True:
-        buf = dl_file.read(blocksize)   
+        buf = dl_file.read(blocksize)
         if not buf:
           break
         dl_progress += len(buf)
         out_file.write(buf)
         done = int(50 * dl_progress / length)
-        sys.stdout.write("\r[%s%s]" % ('#' * done, '.' * (50-done)) )    
+        sys.stdout.write("\r[%s%s]" % ('#' * done, '.' * (50-done)) )
         sys.stdout.flush()
 
   except urllib.error.HTTPError:
