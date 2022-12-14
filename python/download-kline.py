@@ -21,7 +21,7 @@ def download_monthly_klines(trading_type, symbols, num_symbols, intervals, years
 
   if start_date and end_date:
     date_range = start_date + " " + end_date
-
+  date_range = None
   if not start_date:
     start_date = START_DATE
   else:
@@ -81,6 +81,7 @@ def download_daily_klines(trading_type, symbols, num_symbols, intervals, dates, 
         if current_date >= start_date and current_date <= end_date:
           path = get_path(trading_type, "klines", "daily", symbol, interval)
           file_name = "{}-{}-{}.zip".format(symbol.upper(), interval, date)
+          date_range = None
           download_file(path, file_name, date_range, folder)
 
           if checksum == 1:
